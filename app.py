@@ -49,9 +49,6 @@ def index():
             image_prompt = f"""
             Create a surreal image inspired by David Lynch and Jungian psychology.
 
-            Dream:
-            {dream}
-
             Interpretation:
             {interpretation}
 
@@ -65,6 +62,10 @@ def index():
             
             Do not illustrate literally.
             Create an image that feels staged, symbolic, and unresolved.
+            
+            Do not depict literal events.
+            Do not depict violence or explicit fear.
+            Focus on symbolic atmosphere rather than narrative.
             """
 
             img = client.images.generate(
