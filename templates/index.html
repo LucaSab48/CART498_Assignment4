@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Jungian Dream Interpreter</title>
+    <title>Lynch’s Dream Machine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link
@@ -11,12 +11,29 @@
 
     <style>
         body {
-            background: radial-gradient(circle at top, #1e1e2f, #0f0f17);
+            background-image: url("/static/lynch_bg.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: #eaeaea;
         }
+
+        .overlay {
+            background: rgba(10, 10, 15, 0.55);
+            min-height: 100vh;
+            padding: 4rem 0;
+        }
+
+        .subtitle {
+            color: #e6e6e6;
+            opacity: 0.85;
+            font-size: 1.1rem;
+        }
+
         textarea {
             resize: none;
         }
+
         .dream-image {
             max-width: 100%;
             border-radius: 12px;
@@ -24,40 +41,49 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="display-5">Jungian Dream Interpreter</h1>
-        <p class="text-muted">
-            A symbolic exploration of dreams through analytical psychology
-        </p>
-    </div>
+<div class="overlay">
+    <div class="container py-5">
 
-    <form method="POST" class="mb-5">
-        <div class="mb-3">
-            <label class="form-label">Describe your dream</label>
-            <textarea name="dream" rows="6" class="form-control"
-                placeholder="I was walking through a flooded city..."></textarea>
+        <div class="text-center mb-5">
+            <h1 class="display-5">Lynch’s Dream Machine</h1>
+            <p class="subtitle">
+                A Jungian interpreter trapped inside a dream
+            </p>
         </div>
-        <button class="btn btn-light btn-lg w-100">
-            Interpret Dream
-        </button>
-    </form>
 
-    {% if interpretation %}
-    <div class="row g-4">
-        <div class="col-md-6">
-            <h3>Interpretation</h3>
-            <p>{{ interpretation }}</p>
+        <form method="POST" class="mb-5">
+            <div class="mb-3">
+                <label class="form-label">Describe your dream</label>
+                <textarea
+                    name="dream"
+                    rows="6"
+                    class="form-control"
+                    placeholder="I was in a room surrounded by red curtains..."></textarea>
+            </div>
+            <button class="btn btn-light btn-lg w-100">
+                Enter the Dream
+            </button>
+        </form>
+
+        {% if interpretation %}
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h3>What Lingers</h3>
+                <p>{{ interpretation }}</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Visual Representation</h3>
+                <img
+                    class="dream-image"
+                    src="data:image/png;base64,{{ image_data }}">
+            </div>
         </div>
-        <div class="col-md-6">
-            <h3>Visual Representation</h3>
-            <img class="dream-image"
-                 src="data:image/png;base64,{{ image_data }}">
-        </div>
+        {% endif %}
+
     </div>
-    {% endif %}
 </div>
 
 </body>
