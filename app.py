@@ -60,7 +60,8 @@ def index():
                 size="1024x1024"
             )
 
-            image_data = base64.b64decode(img.data[0].b64_json).decode("latin1")
+            image_data = img.data[0].b64_json
+
 
         except Exception as e:
             interpretation = f"Error: {str(e)}"
