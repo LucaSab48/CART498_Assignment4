@@ -57,11 +57,11 @@ def index():
             img = client.images.generate(
                 model="gpt-image-1",
                 prompt=image_prompt,
-                size="512x512"
-
+                size="auto"
             )
-
+            
             image_data = img.data[0].b64_json
+
 
 
         except Exception as e:
@@ -75,3 +75,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
