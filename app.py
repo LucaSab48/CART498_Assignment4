@@ -92,7 +92,8 @@ Focus on atmosphere and symbolism.
             img = client.images.generate(
                 model="gpt-image-1",
                 prompt=image_prompt,
-                size="auto"
+                size="auto",
+                quality = "low"
             )
 
             image_data = img.data[0].b64_json
