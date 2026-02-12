@@ -2,89 +2,392 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lynch’s Dream Machine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lynch's Dream Machine</title>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-ink: #050608;
+            --bg-fog: #11151c;
+            --panel: rgba(8, 10, 14, 0.7);
+            --panel-soft: rgba(15, 18, 24, 0.58);
+            --text-main: #f2ede4;
+            --text-soft: #cabfae;
+            --accent-red: #7a1a1a;
+            --accent-gold: #a98647;
+            --border: rgba(209, 183, 129, 0.35);
+            --shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            color: var(--text-main);
+            background: var(--bg-ink);
+            font-family: "Cormorant Garamond", Georgia, serif;
+        }
+
         body {
-            background-image: url("/static/lynch_bg.jpg");
-            background-size: cover;
+            position: relative;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(120deg, rgba(122, 26, 26, 0.28), transparent 45%),
+                radial-gradient(circle at 12% 8%, rgba(169, 134, 71, 0.14), transparent 38%),
+                radial-gradient(circle at 88% 78%, rgba(122, 26, 26, 0.2), transparent 36%),
+                url("/static/lynch_bg.jpg");
+            background-size: cover, cover, cover, cover;
             background-position: center;
             background-attachment: fixed;
-            color: #eaeaea;
         }
 
-        .overlay {
-            background: rgba(10, 10, 15, 0.55);
-            min-height: 100vh;
-            padding: 4rem 0;
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .subtitle {
-            color: #e6e6e6;
+        body::before {
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.28) 60%, rgba(0, 0, 0, 0.65) 100%);
+        }
+
+        body::after {
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.018) 0px,
+                rgba(255, 255, 255, 0.018) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+            opacity: 0.45;
+            animation: drift 12s linear infinite;
+        }
+
+        @keyframes drift {
+            from { transform: translateY(0); }
+            to { transform: translateY(32px); }
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(1060px, 92vw);
+            margin: 0 auto;
+            padding: 3.5rem 0 4rem;
+        }
+
+        .hero {
+            position: relative;
+            padding: 2.8rem clamp(1.1rem, 2vw, 2.2rem) 2.4rem;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: linear-gradient(145deg, var(--panel), var(--panel-soft));
+            backdrop-filter: blur(4px);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: riseIn 700ms ease;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(120deg, transparent 18%, rgba(169, 134, 71, 0.25) 48%, transparent 74%);
+            transform: translateX(-80%);
+            animation: gleam 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gleam {
+            0%, 62%, 100% { transform: translateX(-80%); }
+            74% { transform: translateX(80%); }
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .eyebrow {
+            font-family: "Space Mono", monospace;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-size: 0.76rem;
+            margin: 0 0 0.8rem;
             opacity: 0.85;
-            font-size: 1.1rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 5.3vw, 4rem);
+            line-height: 0.98;
+            letter-spacing: 0.01em;
+            font-weight: 700;
+            text-wrap: balance;
+        }
+
+        .sub {
+            margin: 1rem 0 0;
+            max-width: 64ch;
+            color: var(--text-soft);
+            font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+            line-height: 1.4;
+        }
+
+        .composer {
+            margin-top: 1.6rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        label {
+            font-family: "Space Mono", monospace;
+            font-size: 0.8rem;
+            color: #d9ccb5;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
         }
 
         textarea {
-            resize: none;
+            width: 100%;
+            border: 1px solid rgba(169, 134, 71, 0.45);
+            border-radius: 14px;
+            background: rgba(10, 10, 12, 0.62);
+            color: var(--text-main);
+            padding: 1rem;
+            resize: vertical;
+            min-height: 156px;
+            max-height: 340px;
+            font-size: 1.07rem;
+            line-height: 1.45;
+            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: rgba(224, 191, 131, 0.9);
+            box-shadow: 0 0 0 4px rgba(122, 26, 26, 0.35), inset 0 0 18px rgba(122, 26, 26, 0.24);
+            transform: translateY(-1px);
+        }
+
+        .composer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .meta {
+            font-family: "Space Mono", monospace;
+            color: #b9a994;
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+        }
+
+        button {
+            border: 1px solid rgba(207, 177, 119, 0.58);
+            border-radius: 999px;
+            padding: 0.72rem 1.25rem;
+            background: linear-gradient(130deg, #671515 0%, #841f1f 45%, #a2322f 100%);
+            color: #f8f0e6;
+            font-family: "Space Mono", monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(93, 20, 20, 0.38);
+            transition: transform 160ms ease, box-shadow 160ms ease, filter 180ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 14px 34px rgba(120, 28, 28, 0.48);
+            filter: saturate(1.12);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button[disabled] {
+            opacity: 0.52;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            filter: grayscale(0.3);
+        }
+
+        .results {
+            margin-top: 1.7rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            animation: riseIn 550ms ease;
+        }
+
+        .panel {
+            border: 1px solid rgba(209, 183, 129, 0.3);
+            border-radius: 16px;
+            background: rgba(7, 9, 12, 0.72);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+        }
+
+        .panel h2 {
+            margin: 0 0 0.8rem;
+            font-family: "Space Mono", monospace;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-gold);
+        }
+
+        .interpretation {
+            margin: 0;
+            white-space: pre-wrap;
+            font-size: clamp(1.08rem, 1.9vw, 1.3rem);
+            line-height: 1.52;
+            color: #f2ebe1;
+        }
+
+        .image-wrap {
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(209, 183, 129, 0.28);
+            background: linear-gradient(130deg, #0f1014, #1d1f28);
         }
 
         .dream-image {
-            max-width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.6);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scale(1.01);
+            transition: transform 280ms ease;
+        }
+
+        .image-wrap:hover .dream-image {
+            transform: scale(1.045);
+        }
+
+        @media (min-width: 880px) {
+            .results {
+                grid-template-columns: 1.15fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                padding-top: 1.4rem;
+            }
+
+            .hero {
+                border-radius: 16px;
+                padding: 1.35rem 1rem 1.3rem;
+            }
+
+            textarea {
+                min-height: 138px;
+            }
+
+            .composer-bar {
+                align-items: stretch;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
+    <main class="page">
+        <section class="hero">
+            <p class="eyebrow">Jungian dream interpretation and generated imagery</p>
+            <h1>Lynch's Dream Machine</h1>
+            <p class="sub">Write the dream as it happened. The system reads symbolic tension, then stages a cinematic image from the emotional residue.</p>
 
-<div class="overlay">
-    <div class="container py-5">
-
-        <div class="text-center mb-5">
-            <h1 class="display-5">Lynch’s Dream Machine</h1>
-            <p class="subtitle">
-                A Jungian interpreter trapped inside a dream
-            </p>
-        </div>
-
-        <form method="POST" class="mb-5">
-            <div class="mb-3">
-                <label class="form-label">Describe your dream</label>
+            <form method="POST" class="composer" id="dreamForm">
+                <label for="dream">Describe your dream</label>
                 <textarea
+                    id="dream"
                     name="dream"
-                    rows="6"
-                    class="form-control"
-                    placeholder="I was in a room surrounded by red curtains..."></textarea>
-            </div>
-            <button class="btn btn-light btn-lg w-100">
-                Enter the Dream
-            </button>
-        </form>
+                    placeholder="I was in a room surrounded by red curtains..."
+                    required></textarea>
 
-        {% if interpretation %}
-        <div class="row g-4">
-            <div class="col-md-6">
-                <h3>What Lingers</h3>
-                <p>{{ interpretation }}</p>
-            </div>
-            <div class="col-md-6">
-                <h3>Visual Representation</h3>
-                <img
-                    class="dream-image"
-                    src="data:image/png;base64,{{ image_data }}">
-            </div>
-        </div>
-        {% endif %}
+                <div class="composer-bar">
+                    <span class="meta" id="charInfo">0 characters</span>
+                    <button type="submit" id="submitBtn">Enter the dream</button>
+                </div>
+            </form>
 
-    </div>
-</div>
+            {% if interpretation %}
+            <section class="results" aria-live="polite">
+                <article class="panel">
+                    <h2>What Lingers</h2>
+                    <p class="interpretation">{{ interpretation }}</p>
+                </article>
 
+                <article class="panel">
+                    <h2>Visual Representation</h2>
+                    {% if image_data %}
+                    <div class="image-wrap">
+                        <img
+                            class="dream-image"
+                            src="data:image/png;base64,{{ image_data }}"
+                            alt="Generated symbolic dream image">
+                    </div>
+                    {% else %}
+                    <p class="meta">No image generated for this response.</p>
+                    {% endif %}
+                </article>
+            </section>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const form = document.getElementById("dreamForm");
+            const textarea = document.getElementById("dream");
+            const submit = document.getElementById("submitBtn");
+            const charInfo = document.getElementById("charInfo");
+
+            function updateState() {
+                const len = textarea.value.trim().length;
+                charInfo.textContent = `${len} character${len === 1 ? "" : "s"}`;
+                submit.disabled = len === 0;
+            }
+
+            textarea.addEventListener("input", updateState);
+            form.addEventListener("submit", function () {
+                submit.disabled = true;
+                submit.textContent = "Interpreting...";
+            });
+
+            updateState();
+        })();
+    </script>
 </body>
 </html>
